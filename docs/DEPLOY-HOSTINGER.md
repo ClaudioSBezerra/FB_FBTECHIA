@@ -219,14 +219,74 @@ registro renovado indefinidamente, não só por um ano.
 
 ---
 
-## Atualizações futuras
+## Atualizações futuras — deploy incremental
+
+Depois do primeiro deploy, **não suba o `dist/` inteiro de novo**. Na prática só
+o `index.html` e os dois arquivos de `assets/` mudam; o `.htaccess`, o favicon,
+o `robots.txt` e o `sitemap.xml` costumam ficar idênticos. Subir tudo só
+aumenta a chance de perder o `.htaccess` outra vez.
+
+### 1. Build
 
 ```bash
-# edite src/data/site.ts (todo o texto do site está lá)
+# o texto do site inteiro está em src/data/site.ts
 npm run build
-# suba o conteúdo de dist/ novamente
 ```
 
-Como o `index.html` é servido com `no-cache`, a mudança aparece na hora.
+### 2. Descobrir o que de fato mudou
+
+```bash
+cd dist
+
+# quais estáticos diferem do que está no ar
+for f in favicon.svg robots.txt sitemap.xml .htaccess; do
+  l=$(md5sum "$f" | cut -d' ' -f1)
+  r=$(curl -s "https://fbtechia.com/$f" | md5sum | cut -d' ' -f1)
+  [ "$l" = "$r" ] && echo "$f  igual — não subir" || echo "$f  DIFERENTE — subir"
+done
+
+# quais assets o site está usando hoje (os que serão apagados)
+curl -s https://fbtechia.com | grep -oE 'assets/index-[A-Za-z0-9_-]+\.(js|css)'
+
+# quais assets o build novo gerou
+ls assets/
+```
+
+### 3. Subir, nesta ordem
+
+1. Os arquivos novos de `dist/assets/`.
+2. O `index.html`, sobrescrevendo.
+3. Apagar os assets antigos listados no passo 2.
+
+**A ordem importa.** O `index.html` é servido com `no-cache`, então a troca
+vale na hora — inclusive um erro. Se ele subir antes dos assets, existe uma
+janela em que o HTML pede um JS que ainda não chegou e o visitante vê a página
+quebrada.
+
+Os assets têm hash no nome e cache de 1 ano. Os antigos não são referenciados
+por nada depois da troca: se não forem apagados, acumulam para sempre.
+
+### 4. Verificar
+
+```bash
+# o HTML aponta para os assets novos?
+curl -s https://fbtechia.com | grep -oE 'assets/index-[A-Za-z0-9_-]+\.(js|css)'
+
+# eles respondem?
+curl -sI https://fbtechia.com/assets/SEU-ARQUIVO.js | head -3
+```
+
+> **`200` não prova que um arquivo existe neste site.** O SPA fallback do
+> `.htaccess` devolve o `index.html` para qualquer caminho que não seja arquivo
+> real — inclusive para assets já apagados. O que distingue é o `content-type`:
+> `text/html` significa que caiu no fallback e o arquivo **não** existe.
+
+O conteúdo textual também não aparece no HTML: é uma SPA React, o HTML é só o
+shell. Para conferir se um texto novo subiu, procure dentro do bundle:
+
+```bash
+curl -s https://fbtechia.com/assets/SEU-ARQUIVO.js | grep -c "trecho do texto"
+```
+
 Se ainda assim vier conteúdo velho, limpe o cache no painel da Hostinger em
 **Desempenho → Cache**.
