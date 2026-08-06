@@ -43,10 +43,10 @@ src/
 ├── index.css             ← design tokens + utilitários (.glass, .btn-primary)
 ├── App.tsx               ← ordem das seções
 └── components/
-    ├── RebrandNotice.tsx ← faixa "Fortes Bezerra agora é FBTECHIA"
     ├── Header.tsx
     ├── Hero.tsx
     ├── Products.tsx      ← portfólio
+    ├── Clients.tsx       ← cases dos clientes
     ├── Approach.tsx      ← como trabalhamos
     ├── Reforma.tsx       ← Reforma Tributária
     ├── Plan.tsx          ← planos e preço
@@ -85,10 +85,16 @@ As soluções descritas no site correspondem a projetos reais:
 | Produto | Repositório local | Situação |
 |---|---|---|
 | FBTax Cloud | `FB_FBTAX_CLOUD` | Em produção — `fbtax.cloud` |
+| FB Apuração | `FB_APU01` | Piloto — Ferreira Costa e JC Distribuição |
 | FB Farol | `FB_FAROL` | Em produção |
 | FB SmartPick | `FB_SMARTPICK` | Em produção |
 | FB Controladoria | `FB_CONTROLADORIA` | Em desenvolvimento |
-| FB Eventos | `FB_EVENTOS` | Piloto |
+
+O `FB_EVENTOS` existe como projeto, mas foi retirado do site por decisão
+comercial — é de outro segmento.
+
+Clientes citados na seção **Clientes**: JC Distribuição (operação completa) e
+Ferreira Costa (FB Apuração).
 
 ## Pendências
 

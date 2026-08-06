@@ -40,7 +40,7 @@ export default function Reforma() {
 
           <div className="mt-12 text-center">
             <a href="#planos" className="btn-primary">
-              Ver planos e teste de 14 dias
+              Ver planos
               <ArrowRight size={18} aria-hidden="true" />
             </a>
           </div>

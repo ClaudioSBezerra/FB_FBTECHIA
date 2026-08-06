@@ -11,8 +11,7 @@ export default function Approach() {
               Quatro princípios que não abrimos mão
             </h2>
             <p className="mt-4 text-muted-foreground">
-              A sigla mudou para incluir IA no nome, mas o método é o mesmo que já sustentava a
-              Fortes Bezerra: entender o processo, medir o que dói e entregar rápido.
+              O método é sempre o mesmo: entender o processo, medir o que dói e entregar rápido.
             </p>
           </div>
 

@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { hero, stats } from '@/data/site'
 
 export default function Hero() {
@@ -12,14 +12,8 @@ export default function Hero() {
 
       <div className="container">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow animate-fade-up">
-            <Sparkles size={14} aria-hidden="true" />
-            {hero.eyebrow}
-          </p>
-
           <h1
-            className="animate-fade-up mt-6 text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl"
-            style={{ animationDelay: '80ms' }}
+            className="animate-fade-up text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl"
           >
             {hero.title}{' '}
             <span className="text-gradient">{hero.titleAccent}</span>
@@ -27,14 +21,14 @@ export default function Hero() {
 
           <p
             className="animate-fade-up mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground"
-            style={{ animationDelay: '160ms' }}
+            style={{ animationDelay: '80ms' }}
           >
             {hero.subtitle}
           </p>
 
           <div
             className="animate-fade-up mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
-            style={{ animationDelay: '240ms' }}
+            style={{ animationDelay: '160ms' }}
           >
             <a href={hero.primaryCta.href} className="btn-primary w-full sm:w-auto">
               {hero.primaryCta.label}
@@ -48,7 +42,7 @@ export default function Hero() {
 
         <dl
           className="animate-fade-up mx-auto mt-20 grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4"
-          style={{ animationDelay: '320ms' }}
+          style={{ animationDelay: '240ms' }}
         >
           {stats.map((s) => (
             <div key={s.label} className="glass rounded-lg px-5 py-6 text-center">

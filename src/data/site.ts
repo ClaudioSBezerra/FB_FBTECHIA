@@ -12,11 +12,11 @@ export const contact = {
     'https://wa.me/5562998483451?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20FBTECHIA%20e%20quero%20saber%20mais.',
   city: 'Goiânia, GO — Brasil',
   legalName: 'FBTECHIA',
-  formerName: 'Fortes Bezerra Tecnologia e Consultoria LTDA',
 }
 
 export const nav = [
   { label: 'Soluções', href: '#solucoes' },
+  { label: 'Clientes', href: '#clientes' },
   { label: 'Reforma Tributária', href: '#reforma' },
   { label: 'Como trabalhamos', href: '#abordagem' },
   { label: 'Planos', href: '#planos' },
@@ -24,11 +24,10 @@ export const nav = [
 ]
 
 export const hero = {
-  eyebrow: 'Antes Fortes Bezerra · agora FBTECHIA',
   title: 'Tecnologia e IA que resolvem',
   titleAccent: 'problemas reais de operação',
   subtitle:
-    'Construímos plataformas sob medida para gestão fiscal, controladoria e operação de distribuidoras. Software que processa o volume real da sua empresa e entrega decisão — não relatório.',
+    'Construímos soluções sob medida. Entregamos uma plataforma inteligente que processa o volume real da sua empresa e entrega decisão — não relatório. Adeus, planilhas.',
   primaryCta: { label: 'Falar com um especialista', href: '#contato' },
   secondaryCta: { label: 'Ver nossas soluções', href: '#solucoes' },
 }
@@ -37,7 +36,7 @@ export const hero = {
 // confirme que o dado continua verdadeiro — é a parte do site que mais
 // rápido envelhece.
 export const stats = [
-  { value: '5', label: 'plataformas próprias em operação' },
+  { value: '5', label: 'módulos próprios em operação' },
   { value: '3', label: 'ERPs integrados: Winthor, Oracle e SAP' },
   { value: '9', label: 'centros de distribuição atendidos' },
   { value: '2026', label: 'prontos para a Reforma Tributária' },
@@ -49,25 +48,49 @@ export type Product = {
   description: string
   bullets: string[]
   status: 'Em produção' | 'Em desenvolvimento' | 'Piloto'
-  icon: 'receipt' | 'gauge' | 'boxes' | 'calendar' | 'chartPie'
+  icon: 'receipt' | 'gauge' | 'boxes' | 'chartPie' | 'fileCheck' | 'calculator' | 'settings'
   url?: string
+  /** Card de menor destaque: sem selo de status e sem lista de recursos. */
+  subtle?: boolean
+}
+
+// A plataforma que hospeda os módulos. Deixou de ser um card próprio porque
+// duplicava o que os módulos já dizem — virou o guarda-chuva da seção.
+export const platform = {
+  name: 'FBTax Cloud',
+  url: 'https://www.fbtax.cloud',
 }
 
 export const products: Product[] = [
   {
-    name: 'FBTax Cloud',
-    tagline: 'Gestão fiscal e apuração da Reforma Tributária',
+    name: 'FB Apuração',
+    tagline: 'Apuração assistida de CBS e IBS',
     description:
-      'Plataforma SaaS multi-tenant de gestão fiscal para empresas brasileiras. Motor em Go que analisa arquivos SPED de gigabytes em segundos, com integração direta à Receita Federal para CBS/IBS e débitos fiscais.',
+      'Apuração assistida da Reforma Tributária integrada à Receita Federal. Importa os XMLs de NF-e de entrada e saída em lote, apura CBS e IBS na regra vigente da transição e simula o efeito da nova carga antes que ele apareça no resultado.',
     bullets: [
-      'Apuração CBS/IBS na regra vigente da transição',
-      'Integração com Receita Federal e ERPs (Oracle, Winthor, SAP)',
-      'Dashboards, relatórios e trilha de auditoria',
-      'Portal do cliente com contratos, licenças e vencimentos',
+      'Importação em lote de XMLs de NF-e (entradas e saídas)',
+      'Apuração de CBS/IBS integrada à API da Receita Federal',
+      'Leitura de SPED de gigabytes em segundos',
+      'Consulta por linguagem natural sobre a base apurada',
+    ],
+    status: 'Piloto',
+    icon: 'fileCheck',
+    url: 'https://apuracao.fbtax.cloud',
+  },
+  {
+    name: 'FB Simulador',
+    tagline: 'Simulação fiscal da Reforma Tributária',
+    description:
+      'Mostra o efeito da nova carga sobre a operação antes que ele apareça no resultado: simula CBS e IBS por produto, por filial e por cliente, e aponta onde a margem aperta e onde abre crédito.',
+    bullets: [
+      'Simulação de CBS/IBS por produto e por filial',
+      'Impacto na margem antes da mudança entrar em vigor',
+      'Identificação de créditos que o regime antigo travava',
+      'Comparativo entre o regime atual e o da transição',
     ],
     status: 'Em produção',
-    icon: 'receipt',
-    url: 'https://www.fbtax.cloud',
+    icon: 'calculator',
+    url: 'https://simulador.fbtax.cloud',
   },
   {
     name: 'FB Farol',
@@ -82,6 +105,7 @@ export const products: Product[] = [
     ],
     status: 'Em produção',
     icon: 'gauge',
+    url: 'https://farol.fbtax.cloud',
   },
   {
     name: 'FB SmartPick',
@@ -96,6 +120,7 @@ export const products: Product[] = [
     ],
     status: 'Em produção',
     icon: 'boxes',
+    url: 'https://smartpick.fbtax.cloud',
   },
   {
     name: 'FB Controladoria',
@@ -112,20 +137,63 @@ export const products: Product[] = [
     icon: 'chartPie',
   },
   {
-    name: 'FB Eventos',
-    tagline: 'Gestão de grandes eventos',
+    name: 'Administrativo',
+    tagline: 'Gestão da plataforma',
     description:
-      'Plataforma SaaS multi-tenant para organizadoras de eventos de massa. Venda de espaços a fornecedores com planta visual e pagamento integrado, terceirização de mão de obra, ingressos e integrações.',
-    bullets: [
-      'Planta do evento com lotes e zonas clicáveis',
-      'Venda de espaço self-service por m²',
-      'Gestão de prestadores com comissionamento',
-      'Ingressos e integração com sites de venda',
-    ],
-    status: 'Piloto',
-    icon: 'calendar',
+      'Painel de administração da plataforma: cadastro de empresas e filiais, licenças, usuários e comunicados. Acesso restrito — não é módulo comercializado à parte.',
+    bullets: [],
+    status: 'Em produção',
+    icon: 'settings',
+    url: 'https://www.fbtax.cloud/admin',
+    subtle: true,
   },
 ]
+
+export type Client = {
+  name: string
+  url: string
+  domain: string
+  scopeLabel: string
+  description: string
+  solutions: string[]
+}
+
+// Clientes reais em produção. Só entra aqui quem está no ar — e só com o
+// escopo que de fato usa. Nada de logo decorativo.
+export const clients: Client[] = [
+  {
+    name: 'JC Distribuição',
+    url: 'https://www.jcdistribuicao.com.br',
+    domain: 'jcdistribuicao.com.br',
+    scopeLabel: 'Operação completa',
+    description:
+      'Atendida ponta a ponta: fiscal, força de vendas, centro de distribuição e controladoria rodam sobre plataformas nossas, integradas ao ERP que a operação já usava.',
+    solutions: [
+      'FB Farol',
+      'FB SmartPick',
+      'FB Simulador',
+      'FB Controladoria',
+      'FB Apuração (piloto)',
+    ],
+  },
+  {
+    name: 'Ferreira Costa',
+    url: 'https://www.ferreiracosta.com',
+    domain: 'ferreiracosta.com',
+    scopeLabel: 'Reforma Tributária',
+    description:
+      'Piloto do FB Apuração para a Reforma Tributária: CBS e IBS apurados na regra vigente da transição, a partir dos XMLs de NF-e da operação e integrados à Receita Federal.',
+    solutions: ['FB Apuração (piloto)'],
+  },
+]
+
+export const clientsSection = {
+  eyebrow: 'Clientes',
+  title: 'Quem já opera',
+  titleAccent: 'com a gente',
+  description:
+    'Operações reais, em produção, com volume de verdade passando pelas plataformas.',
+}
 
 export const approach = [
   {
@@ -178,10 +246,10 @@ export const plan = {
   eyebrow: 'Planos',
   title: 'Comece pelo que dói mais',
   description:
-    'Contratação por empresa, com teste antes de decidir. Escopo e preço se ajustam ao porte da operação e ao número de CNPJs do grupo.',
+    'Contratação por empresa. Escopo e preço se ajustam ao porte da operação e ao número de CNPJs do grupo.',
   price: 'R$ 300,00',
   priceSuffix: 'por empresa/mês',
-  priceNote: 'A partir de · 14 dias de teste sem cartão de crédito',
+  priceNote: 'A partir de',
   includes: [
     'Acesso completo à plataforma contratada',
     'Atualizações automáticas de legislação',
@@ -193,30 +261,22 @@ export const plan = {
     'Consultoria mensal de acompanhamento',
   ],
   guarantee:
-    'Se durante o período de teste a ferramenta não provar valor, você cancela sem custo e sem burocracia.',
-  cta: { label: 'Começar teste de 14 dias', href: '#contato' },
+    'Sem fidelidade forçada. As condições de aviso prévio ficam explícitas em contrato, antes da assinatura.',
+  cta: { label: 'Solicitar proposta', href: '#contato' },
 }
 
 export const faq = [
   {
-    q: 'A Fortes Bezerra virou FBTECHIA. O que muda para quem já é cliente?',
-    a: 'Só o nome e o endereço do site. A empresa, a equipe, os contratos e os sistemas em produção continuam exatamente os mesmos. O domínio fortesbezerra.com.br passa a redirecionar para fbtechia.com, e os acessos às plataformas seguem funcionando normalmente.',
-  },
-  {
     q: 'Vocês vendem software pronto ou desenvolvem sob medida?',
-    a: 'Os dois. Temos plataformas em produção — FBTax Cloud, FB Farol, FB SmartPick — que atendem casos recorrentes, e desenvolvemos módulos específicos quando o processo do cliente exige. A maior parte dos nossos projetos começa com um produto existente e cresce com o que é próprio daquela operação.',
+    a: 'Os dois. A plataforma FBTax Cloud reúne módulos em produção — FB Apuração, FB Simulador, FB Farol, FB SmartPick — que atendem casos recorrentes, e desenvolvemos módulos específicos quando o processo do cliente exige. A maior parte dos nossos projetos começa com um módulo existente e cresce com o que é próprio daquela operação.',
   },
   {
     q: 'Integram com qual ERP?',
     a: 'Já operamos integrados a Winthor (Totvs/PC Sistemas), Oracle e SAP S/4HANA. Para outros ERPs, avaliamos a integração na fase de diagnóstico — o padrão é uma ponte que lê o ERP sem interferir na operação dele.',
   },
   {
-    q: 'Como funciona o teste de 14 dias?',
-    a: 'Você usa a plataforma com os seus próprios dados, sem cartão de crédito e sem compromisso. Nós fazemos a carga inicial e o treinamento da equipe dentro desse período, para que a avaliação seja com a operação real e não com dados de demonstração.',
-  },
-  {
     q: 'Qual o prazo de implementação?',
-    a: 'Dias, não meses. A infraestrutura já existe — autenticação, multi-tenant, integrações. O que leva tempo é entender o seu processo e mapear os dados, e isso corre em paralelo ao teste.',
+    a: 'Dias, não meses. A infraestrutura já existe — autenticação, multi-tenant, integrações. O que leva tempo é entender o seu processo e mapear os dados, e isso corre em paralelo à implantação.',
   },
   {
     q: 'Onde ficam hospedados os dados?',

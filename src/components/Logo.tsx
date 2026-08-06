@@ -2,10 +2,19 @@ type Props = {
   className?: string
 }
 
-/** Marca FBTECHIA: monograma "FB" em gradiente teal→cyan + wordmark. */
+/**
+ * Marca FBTECHIA: monograma "FB" em gradiente teal→cyan + wordmark.
+ * O wordmark quebra em "FBTECH & IA" — o "&" separa tecnologia de IA para
+ * deixar a segunda explícita na leitura. A razão social e o domínio seguem
+ * escritos "FBTECHIA", sem o "&".
+ */
 export default function Logo({ className = '' }: Props) {
   return (
-    <a href="#top" className={`flex items-center gap-2.5 ${className}`} aria-label="FBTECHIA — início">
+    <a
+      href="#top"
+      className={`flex items-center gap-2.5 ${className}`}
+      aria-label="FBTECH & IA — início"
+    >
       <svg
         width="36"
         height="36"
@@ -31,7 +40,9 @@ export default function Logo({ className = '' }: Props) {
         />
       </svg>
       <span className="text-lg font-extrabold tracking-tight">
-        FB<span className="text-gradient">TECHIA</span>
+        FB<span className="text-gradient">TECH</span>
+        <span className="mx-1 font-bold text-primary/80">&amp;</span>
+        <span className="text-gradient">IA</span>
       </span>
     </a>
   )

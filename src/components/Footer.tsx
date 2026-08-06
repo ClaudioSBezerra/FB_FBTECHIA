@@ -1,5 +1,5 @@
 import Logo from './Logo'
-import { contact, nav, products } from '@/data/site'
+import { contact, nav, platform, products } from '@/data/site'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -12,7 +12,6 @@ export default function Footer() {
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
               Tecnologia e inteligência artificial para gestão fiscal, controladoria e operações.
-              Antes {contact.formerName}.
             </p>
           </div>
 
@@ -64,6 +63,16 @@ export default function Footer() {
               Plataformas
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+              <li>
+                <a
+                  href={platform.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold transition-colors hover:text-primary"
+                >
+                  {platform.name}
+                </a>
+              </li>
               {products
                 .filter((p) => p.url)
                 .map((p) => (

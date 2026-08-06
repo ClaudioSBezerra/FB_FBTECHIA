@@ -86,8 +86,25 @@
 
   .glass-hover:hover {
     background-color: hsl(var(--card) / 0.85);
-    border-color: hsl(var(--primary) / 0.35);
+    border-color: hsl(var(--primary) / 0.55);
     transform: translateY(-4px);
+    /* O halo é o que faz o hover ser percebido: só o deslocamento de 4px
+       passa despercebido em card grande. */
+    box-shadow: 0 14px 40px hsl(var(--primary) / 0.18);
+  }
+
+  /* O GlowCursor substitui o ponteiro nativo — some com ele enquanto ativo. */
+  body.glow-cursor-active,
+  body.glow-cursor-active * {
+    cursor: none;
+  }
+
+  /* Card inteiro clicável sem aninhar <a> dentro de <a>: o link interno
+     projeta uma área invisível sobre todo o cartão. */
+  .stretch-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
 
   .text-gradient {
