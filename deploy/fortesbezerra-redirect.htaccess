@@ -1,0 +1,24 @@
+# Redirect 301 do domínio antigo para o novo.
+#
+# DESTINO: public_html do domínio fortesbezerra.com.br na Hostinger.
+# Renomeie para ".htaccess" ao subir. Este arquivo NÃO vai para o fbtechia.com.
+#
+# Depois de aplicar, o public_html do fortesbezerra.com.br pode conter apenas
+# este arquivo — o site Horizons antigo deixa de ser servido.
+#
+# 301 (permanente) é o que transfere a autoridade de SEO acumulada para o
+# domínio novo. Não use 302 aqui.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Preserva o caminho e a query string: fortesbezerra.com.br/algo?x=1
+  # vira fbtechia.com/algo?x=1
+  RewriteCond %{HTTP_HOST} ^(www\.)?fortesbezerra\.com\.br$ [NC]
+  RewriteRule ^(.*)$ https://fbtechia.com/$1 [R=301,L,QSA]
+</IfModule>
+
+# Fallback caso mod_rewrite esteja indisponível no plano.
+<IfModule !mod_rewrite.c>
+  Redirect 301 / https://fbtechia.com/
+</IfModule>

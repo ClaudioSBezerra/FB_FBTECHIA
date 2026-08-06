@@ -1,0 +1,77 @@
+# FBTECHIA — configuração Apache para hospedagem compartilhada Hostinger.
+# Este arquivo é copiado para dist/ no build e deve ficar em public_html/.
+
+# ---------------------------------------------------------------------------
+# 1. HTTPS e domínio canônico (sem www)
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Força HTTPS.
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+  # www.fbtechia.com -> fbtechia.com
+  RewriteCond %{HTTP_HOST} ^www\.fbtechia\.com$ [NC]
+  RewriteRule ^(.*)$ https://fbtechia.com/$1 [R=301,L]
+
+  # SPA fallback: qualquer rota que não seja arquivo/diretório real serve o
+  # index.html. Hoje a landing é uma página só, mas isso deixa pronto para
+  # quando houver rotas (/sobre, /produtos/...).
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 2. Compressão
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 3. Cache
+# Assets do Vite têm hash no nome, então cache longo é seguro. O index.html
+# nunca pode ser cacheado, senão o deploy novo não aparece para quem já visitou.
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|svg|png|jpg|jpeg|webp|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Cabeçalhos de segurança básicos.
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 4. Diversos
+# ---------------------------------------------------------------------------
+Options -Indexes
+ErrorDocument 404 /index.html
+
+<IfModule mod_mime.c>
+  AddType image/svg+xml .svg
+  AddType font/woff2 .woff2
+</IfModule>

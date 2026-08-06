@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Tema "dark glass green" herdado do FBTax Cloud: navy profundo (#0a1a2b)
+     com acento teal→cyan. A landing é dark-only — o <html> já vem com .dark
+     e não há toggle, então os tokens vivem direto no :root. */
+  :root {
+    --background: 211 62% 10%;
+    --foreground: 210 40% 96%;
+
+    --card: 214 50% 11%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 217 44% 14%;
+
+    /* teal-500 #14b8a6 */
+    --primary: 173 80% 40%;
+    --primary-foreground: 211 62% 10%;
+
+    --muted: 217 44% 14%;
+    --muted-foreground: 215 20% 65%;
+
+    /* cyan-500 #06b6d4 — segunda parada do gradiente da marca */
+    --accent: 189 94% 43%;
+    --accent-foreground: 211 62% 10%;
+
+    --border: 215 25% 20%;
+    --ring: 173 80% 40%;
+
+    --success: 160 84% 39%;
+    --warning: 38 92% 50%;
+
+    --radius: 0.75rem;
+
+    --page-gradient: linear-gradient(135deg, hsl(209 49% 8%), hsl(211 62% 10%));
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Compensa faixa + header fixos quando um link de âncora rola a página. */
+    scroll-padding-top: 7rem;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    position: relative;
+  }
+
+  /* Gradiente de fundo numa camada fixa própria em vez de
+     `background-attachment: fixed` no body — este último força repaint da
+     página inteira a cada frame de scroll e trava a rolagem junto com os
+     backdrop-filter dos cards de vidro. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--page-gradient);
+    pointer-events: none;
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+}
+
+@layer components {
+  /* Superfície de vidro: o alfa baixo deixa o gradiente da página aparecer,
+     que é o que dá o efeito "glass" em cima do navy. */
+  .glass {
+    background-color: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(0 0% 100% / 0.08);
+  }
+
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+
+  .glass-hover:hover {
+    background-color: hsl(var(--card) / 0.85);
+    border-color: hsl(var(--primary) / 0.35);
+    transform: translateY(-4px);
+  }
+
+  .text-gradient {
+    background: linear-gradient(120deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3
+           font-semibold transition-all duration-300;
+    background: linear-gradient(120deg, hsl(var(--primary)), hsl(var(--accent)));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 8px 30px hsl(var(--primary) / 0.35);
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3
+           font-semibold text-foreground transition-all duration-300;
+    border: 1px solid hsl(var(--border));
+  }
+
+  .btn-ghost:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    background-color: hsl(var(--primary) / 0.08);
+  }
+
+  .section {
+    @apply py-20 md:py-28;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs
+           font-semibold uppercase tracking-wider;
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
