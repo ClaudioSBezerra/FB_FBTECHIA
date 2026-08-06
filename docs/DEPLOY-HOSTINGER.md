@@ -239,7 +239,7 @@ npm run build
 cd dist
 
 # quais estáticos diferem do que está no ar
-for f in favicon.svg robots.txt sitemap.xml .htaccess; do
+for f in favicon.svg robots.txt sitemap.xml; do
   l=$(md5sum "$f" | cut -d' ' -f1)
   r=$(curl -s "https://fbtechia.com/$f" | md5sum | cut -d' ' -f1)
   [ "$l" = "$r" ] && echo "$f  igual — não subir" || echo "$f  DIFERENTE — subir"
@@ -251,6 +251,14 @@ curl -s https://fbtechia.com | grep -oE 'assets/index-[A-Za-z0-9_-]+\.(js|css)'
 # quais assets o build novo gerou
 ls assets/
 ```
+
+> **Não compare o `.htaccess` por HTTP.** O Apache bloqueia o acesso a ele e
+> devolve `403`; o checksum sairia do HTML de erro, acusando "diferente" toda
+> vez. Para saber se ele mudou, use o git:
+>
+> ```bash
+> git diff --quiet fb93252 HEAD -- public/.htaccess && echo "inalterado desde o 1º deploy"
+> ```
 
 ### 3. Subir, nesta ordem
 

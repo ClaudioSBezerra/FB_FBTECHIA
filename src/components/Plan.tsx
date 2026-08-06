@@ -14,13 +14,13 @@ export default function Plan() {
         <div className="glass mx-auto mt-14 max-w-4xl overflow-hidden rounded-2xl">
           <div className="grid md:grid-cols-[0.9fr_1.1fr]">
             <div className="border-b border-white/8 p-8 md:border-b-0 md:border-r md:p-10">
-              <p className="text-sm text-muted-foreground">{plan.priceNote}</p>
-              <p className="mt-4 flex items-baseline gap-2">
-                <span className="text-5xl font-extrabold tracking-tight text-gradient">
-                  {plan.price}
-                </span>
+              <p className="text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">
+                {plan.pitch}{' '}
+                <span className="text-gradient">{plan.pitchAccent}</span>
               </p>
-              <p className="mt-1 text-sm text-muted-foreground">{plan.priceSuffix}</p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                {plan.pitchNote}
+              </p>
 
               <a href={plan.cta.href} className="btn-primary mt-8 w-full">
                 {plan.cta.label}

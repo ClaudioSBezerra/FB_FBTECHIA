@@ -247,9 +247,12 @@ export const plan = {
   title: 'Comece pelo que dói mais',
   description:
     'Contratação por empresa. Escopo e preço se ajustam ao porte da operação e ao número de CNPJs do grupo.',
-  price: 'R$ 300,00',
-  priceSuffix: 'por empresa/mês',
-  priceNote: 'A partir de',
+  // Preço saiu da vitrine: o valor varia com porte e número de CNPJs, e o
+  // número cru sem contexto ancorava a conversa antes do diagnóstico.
+  pitch: 'Faça como os maiores',
+  pitchAccent: 'em seu segmento',
+  pitchNote:
+    'Os nomes logo acima já operam com as nossas plataformas. Uma conversa costuma ser suficiente para saber se faz sentido para a sua operação.',
   includes: [
     'Acesso completo à plataforma contratada',
     'Atualizações automáticas de legislação',
