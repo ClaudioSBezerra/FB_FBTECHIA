@@ -67,11 +67,16 @@ deploy/
 
 ## Deploy
 
+**No ar em https://fbtechia.com desde 06/08/2026.**
+
 Passo a passo completo em **[docs/DEPLOY-HOSTINGER.md](docs/DEPLOY-HOSTINGER.md)**,
-incluindo a migração do domínio antigo com redirect 301.
+com o que deu errado no primeiro deploy e como o domínio antigo foi tratado.
 
 Resumo: `npm run build` → subir o **conteúdo** de `dist/` para o `public_html`
-do fbtechia.com → ativar SSL → aplicar o redirect no domínio antigo.
+do fbtechia.com, com o `.htaccess` junto. O SSL a Hostinger emite sozinha.
+
+O `fortesbezerra.com.br` foi desligado (sem redirect 301) mantendo domínio e
+e-mail ativos — ver seção 6 do guia.
 
 ## Portfólio referenciado
 
@@ -90,4 +95,5 @@ As soluções descritas no site correspondem a projetos reais:
 - [ ] `public/og-image.png` (1200×630) para as prévias de link — as meta tags
       já apontam para ela, mas o arquivo ainda não existe.
 - [ ] Confirmar a razão social e o CNPJ definitivos da FBTECHIA para o rodapé.
-- [ ] Criar a caixa `contato@fbtechia.com` antes de divulgar o site.
+- [ ] Ativar DKIM do `fbtechia.com` no painel — SPF e MX ok, DKIM ausente.
+- [x] Criar a caixa `contato@fbtechia.com`.

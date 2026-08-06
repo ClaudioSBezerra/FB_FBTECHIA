@@ -37,6 +37,27 @@ ns2.dns-parking.com
 
 A propagação leva de minutos a algumas horas.
 
+### Criar o website (não pule este passo)
+
+Ter o DNS apontado **não** cria o `public_html`. Enquanto o website não existir,
+o domínio responde com a página *"Parked Domain name on Hostinger DNS system"* e
+não há para onde subir arquivo.
+
+Painel → **Websites → Adicionar Website** → tipo **Custom PHP/HTML website** →
+selecionar o `fbtechia.com`.
+
+O tipo importa. As outras opções não servem:
+
+| Opção | Por quê não |
+|---|---|
+| Hostinger Horizons | AI builder — substitui o conteúdo pelo dele |
+| WordPress | instala CMS com `.htaccess` e `index.php` conflitantes |
+| Website Builder | editor visual, não aceita upload de build |
+| Deploy web app | para apps com runtime (Node/Python), não estático |
+
+`Custom PHP/HTML` é a única que serve arquivos estáticos via Apache **respeitando
+o `.htaccess`** — sem isso não há HTTPS forçado, SPA fallback nem cache.
+
 Anote o caminho do `public_html` do fbtechia.com — em hospedagem compartilhada
 com múltiplos domínios ele normalmente é:
 
@@ -48,25 +69,38 @@ com múltiplos domínios ele normalmente é:
 
 ## 3. Subir os arquivos
 
-Duas opções. A primeira é mais simples, a segunda é melhor para repetir.
+### Opção A — File Manager, upload manual (foi o que funcionou)
 
-### Opção A — File Manager (interface web)
+A extração de `.zip` pelo File Manager **falhou** no deploy de 06/08/2026 — o
+botão de extrair não concluiu. São 6 itens, o upload direto é mais rápido do que
+depurar o zip.
 
-1. Compacte o **conteúdo** de `dist/` em um `.zip`:
+1. Painel → **Arquivos → Gerenciador de Arquivos** → `public_html` do fbtechia.com.
+2. **Ative "Mostrar arquivos ocultos"** em Configurações. Sem isso o `.htaccess`
+   fica invisível o deploy inteiro.
+3. Apague o conteúdo existente, incluindo o `default.php` que a Hostinger cria —
+   `index.php` tem precedência sobre `index.html` no `DirectoryIndex` e serviria
+   a página padrão no lugar do site.
+4. Prepare o `.htaccess` com nome visível, porque o seletor de arquivos do
+   navegador não mostra dotfiles:
 
    ```bash
-   cd dist && zip -r ../fbtechia-site.zip . && cd ..
+   cp dist/.htaccess htaccess.txt
    ```
 
-   O zip precisa ter `index.html` na raiz, não `dist/index.html`.
+5. Suba na raiz do `public_html`: `index.html`, `favicon.svg`, `robots.txt`,
+   `sitemap.xml` (de `dist/`) e o `htaccess.txt`.
+6. Crie a pasta `assets` e suba dentro dela os arquivos de `dist/assets/`.
+   Os nomes têm hash e o `index.html` aponta para eles — não renomeie.
+7. Renomeie `htaccess.txt` → `.htaccess`.
+8. Apague o `htaccess.txt` local.
 
-2. Painel Hostinger → **Arquivos → Gerenciador de Arquivos**.
-3. Entre no `public_html` do fbtechia.com e apague o conteúdo existente.
-4. Faça upload do zip e use **Extrair**.
-5. Confirme que `index.html`, `assets/` e `.htaccess` estão na raiz.
-
-> O File Manager esconde arquivos que começam com ponto por padrão.
-> Ative "Mostrar arquivos ocultos" para ver o `.htaccess`.
+> **Confira em que pasta você está antes de subir.** No deploy de 06/08/2026 os
+> arquivos foram parar em `../site`, irmã do `public_html`. Nada fora do
+> `public_html` é servido pela web: o sintoma é a raiz devolver **403 Forbidden**
+> (pasta vazia, sem index) e `/index.html` devolver 404. A correção é mover o
+> conteúdo para dentro do `public_html`, com arquivos ocultos visíveis para o
+> `.htaccess` não ficar para trás.
 
 ### Opção B — FTP/SFTP
 
@@ -102,51 +136,80 @@ conteúdo de `public/.htaccess`.
 
 ---
 
-## 5. Ativar o SSL
+## 5. SSL
 
-Painel → **Segurança → SSL** → instalar o certificado gratuito para
-`fbtechia.com` e `www.fbtechia.com`.
+Na criação do website a Hostinger emitiu o certificado Let's Encrypt
+automaticamente, cobrindo `fbtechia.com` e `www.fbtechia.com` — não foi
+preciso nenhum passo manual.
 
-Faça isso **antes** de testar, porque a regra de HTTPS do `.htaccess` gera loop
-de redirecionamento enquanto não existe certificado válido.
+Se por algum motivo ele não existir, instale em **Segurança → SSL** *antes* de
+abrir o site no navegador: a regra de HTTPS do `.htaccess` gera loop de
+redirecionamento enquanto não houver certificado válido, e o sintoma parece
+erro de deploy.
 
 ---
 
-## 6. Redirect 301 do domínio antigo
+## 6. Domínio antigo — o que foi feito
 
-Este é o passo que preserva o SEO acumulado pelo `fortesbezerra.com.br`.
+**Decisão de 06/08/2026: o `fortesbezerra.com.br` foi desligado, sem redirect.**
+O tráfego era baixo e a opção foi manter apenas o domínio e o e-mail.
 
-1. O site atual do fortesbezerra.com.br é um projeto **Hostinger Horizons**.
-   Antes de mais nada, desconecte o Horizons daquele domínio (painel do
-   Horizons → configurações do projeto → remover domínio personalizado).
-   Sem isso o Horizons continua respondendo e o `.htaccess` nunca é lido.
+O que foi executado: painel do **Horizons** → projeto do fortesbezerra.com.br →
+configurações → **remover domínio personalizado**. Só isso.
 
-2. Copie `deploy/fortesbezerra-redirect.htaccess` para o `public_html` do
-   **fortesbezerra.com.br**, renomeando para `.htaccess`.
+Estado resultante, verificado:
 
-3. O `public_html` do domínio antigo pode ficar só com esse arquivo.
+| Item | Estado |
+|---|---|
+| Registro A | sem resposta — saiu junto com o Horizons |
+| `www` | NXDOMAIN |
+| Nameservers | `ns1`/`ns2.dns-parking.com` — zona ainda na Hostinger |
+| MX | `mx1`/`mx2.hostinger.com` — **e-mail preservado** |
 
-4. Teste o redirecionamento — o esperado é `301` apontando para o domínio novo:
+A zona DNS continuar na Hostinger é o que mantém o e-mail vivo.
 
-   ```bash
-   curl -I https://fortesbezerra.com.br
-   curl -I https://fortesbezerra.com.br/qualquer-caminho
-   ```
+> **Nunca remova o domínio em Domínios → excluir, e não deixe expirar.**
+> Qualquer um dos dois apaga a zona DNS junto: os MX somem e o recebimento em
+> `@fortesbezerra.com.br` para na hora, sem aviso. Confirme a renovação
+> automática no painel.
 
-5. **Mantenha o domínio antigo registrado e renovado por pelo menos 1 ano.**
-   Um 301 só transfere autoridade enquanto ele responde. Deixar o domínio
-   expirar joga fora exatamente o que o redirect estava preservando.
+Excluir o *website* do hPanel (**Websites → Excluir website**) seria seguro para
+o e-mail — na Hostinger as caixas são vinculadas ao domínio, não ao website —
+mas não foi feito, e não é necessário.
+
+### Se um dia quiser o redirect 301 em vez do desligamento
+
+O arquivo `deploy/fortesbezerra-redirect.htaccess` continua no repositório. Para
+usá-lo é preciso que o domínio antigo **tenha um website** no hPanel, senão não
+existe `public_html` para receber o arquivo. Copie-o para lá renomeado como
+`.htaccess` e valide:
+
+```bash
+curl -I https://fortesbezerra.com.br
+curl -I https://fortesbezerra.com.br/qualquer-caminho   # espera-se 301
+```
+
+Um 301 só transfere autoridade enquanto o domínio responde — ele exige manter o
+registro renovado indefinidamente, não só por um ano.
 
 ---
 
 ## 7. Pós-migração
 
-- [ ] Google Search Console: adicionar a propriedade `fbtechia.com` e usar
-      **Configurações → Alteração de endereço** na propriedade antiga.
-- [ ] Enviar `https://fbtechia.com/sitemap.xml` no Search Console.
-- [ ] Atualizar o e-mail de contato: criar `contato@fbtechia.com` em
-      **E-mails → Contas de e-mail** e manter `contato@fortesbezerra.com.br`
-      recebendo (encaminhamento) por pelo menos 12 meses.
+- [x] Criar `contato@fbtechia.com` em **E-mails → Contas de e-mail**.
+- [ ] **Ativar DKIM** para o `fbtechia.com` em **E-mails → Configurações → DKIM**.
+      Verificado em 06/08/2026: MX e SPF (`v=spf1 include:_spf.mail.hostinger.com
+      ~all`) publicados, DMARC em `p=none`, **DKIM ausente**. Domínio novo sem
+      histórico de envio e sem DKIM tem alta chance de cair em spam — justamente
+      no e-mail que avisa os clientes da mudança de marca.
+- [ ] Confirmar a renovação automática do `fortesbezerra.com.br` (ver seção 6).
+- [ ] Manter `contato@fortesbezerra.com.br` recebendo, com encaminhamento para a
+      caixa nova, por pelo menos 12 meses.
+- [ ] Google Search Console: adicionar a propriedade `fbtechia.com` e enviar
+      `https://fbtechia.com/sitemap.xml`.
+      A ferramenta **Alteração de endereço** *não* se aplica: ela exige que o
+      domínio antigo responda com 301, e ele foi desligado. O `fbtechia.com`
+      começa do zero em reputação.
 - [ ] Atualizar links do domínio antigo em: assinaturas de e-mail, WhatsApp
       Business, Google Meu Negócio, LinkedIn, notas fiscais, propostas
       comerciais e contratos em circulação.

@@ -2,6 +2,7 @@ node_modules/
 dist/
 dist-ssr/
 *.local
+fbtechia-site.zip
 
 .env
 .env.*
@@ -16,3 +17,4 @@ npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+htaccess.txt
