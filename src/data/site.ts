@@ -21,6 +21,7 @@ export const nav = [
   { label: 'Como trabalhamos', href: '#abordagem' },
   { label: 'Planos', href: '#planos' },
   { label: 'FAQ', href: '#faq' },
+  { label: 'Portfólio', href: '/portfolio/' },
 ]
 
 export const hero = {
